@@ -1,9 +1,10 @@
-import { Body, Controller, Post, Request, UseGuards } from '@nestjs/common';
+import {Body, Controller, Get, Post, Request, UseGuards} from '@nestjs/common';
 import { AuthService } from '../services/AuthService';
 import { CreateUserDTO } from '../DTO/CreateUserDTO';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiBadRequestResponse, ApiBody, ApiOkResponse, ApiUnauthorizedResponse } from '@nestjs/swagger';
+import {ApiBadRequestResponse, ApiBearerAuth, ApiBody, ApiOkResponse, ApiUnauthorizedResponse} from '@nestjs/swagger';
 import { LoginBody, LoginResponse } from '../responses/LoginResponse';
+import { UserResponse } from '../responses/UserResponse';
 
 @Controller('/auth')
 export class AuthController {
@@ -42,5 +43,21 @@ export class AuthController {
     @Body() body: CreateUserDTO,
   ) {
     return this.authService.register(body);
+  }
+
+  @ApiBearerAuth()
+  @ApiOkResponse({
+    type: UserResponse,
+  })
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorizedException`
+  })
+  @UseGuards(AuthGuard('jwt'))
+  @Get('/user')
+  getMe(
+    @Request() req,
+  ) {
+    return req.user;
   }
 }

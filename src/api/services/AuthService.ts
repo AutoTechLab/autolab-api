@@ -61,7 +61,7 @@ export class AuthService {
 
   async login (user) {
     if (user.state !== 'APPROVED') throw new UnauthorizedException('User is not approved');
-    const payload = { id: user.id };
+    const payload = { sub: user.id };
     return {
       accessToken: this.jwtService.sign(payload),
     };

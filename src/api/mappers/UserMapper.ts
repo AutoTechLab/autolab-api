@@ -1,8 +1,7 @@
-import { User } from "../schemas/UserShema";
-
 export class UserMapper {
-  getUser (user: User) {
+  getUser (user) {
     return {
+      id: user.id,
       username: user.username,
       email: user.email,
       firstname: user.firstname,

@@ -9,6 +9,6 @@ export class UserMapper {
       middlename: user.middlename,
       age: user.age,
       state: user.state,
-    }
+    };
   }
 }

@@ -1,7 +1,7 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { JwtService } from "@nestjs/jwt";
+import { JwtService } from '@nestjs/jwt';
 import { CreateUserDTO } from '../DTO/CreateUserDTO';
 import { User } from '../schemas/UserShema';
 import { UserMapper } from '../mappers/UserMapper';
@@ -10,7 +10,7 @@ import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
-  constructor(
+  constructor (
     @InjectModel(User.name)
     private userModel: Model<User>,
     private readonly userMapper: UserMapper,
@@ -25,7 +25,7 @@ export class AuthService {
         { username: securedUser.username },
         { email: securedUser.username },
       ],
-    })
+    });
 
     if (user) throw new AlreadyRegisteredException();
 

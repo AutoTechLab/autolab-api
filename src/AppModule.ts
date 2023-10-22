@@ -6,7 +6,7 @@ import * as process from 'process';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true, }),
+    ConfigModule.forRoot({ isGlobal: true }),
     MongooseModule.forRoot(process.env.MONGO),
     AuthModule,
   ],

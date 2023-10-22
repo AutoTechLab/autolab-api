@@ -2,14 +2,14 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class LoginResponse {
   @ApiProperty({
-    description: 'User`s access token'
+    description: 'User`s access token',
   })
     accessToken: string;
 }
 
 export class LoginBody {
   @ApiProperty({
-    description: 'User`s email or username'
+    description: 'User`s email or username',
   })
     username: string;
 

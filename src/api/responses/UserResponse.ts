@@ -14,7 +14,7 @@ export class UserResponse {
   @ApiProperty({
     description: 'User`s email',
   })
-    email: String;
+    email: string;
 
   @ApiProperty({
     description: 'User`s firstname',

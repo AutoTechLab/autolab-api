@@ -1,14 +1,15 @@
-import {Body, Controller, Get, Post, Request, UseGuards} from '@nestjs/common';
+import { Body, Controller, Get, Post, Request, UseGuards } from '@nestjs/common';
 import { AuthService } from '../services/AuthService';
 import { CreateUserDTO } from '../DTO/CreateUserDTO';
-import { AuthGuard } from '@nestjs/passport';
-import {ApiBadRequestResponse, ApiBearerAuth, ApiBody, ApiOkResponse, ApiUnauthorizedResponse} from '@nestjs/swagger';
+import { ApiBadRequestResponse, ApiBearerAuth, ApiBody, ApiOkResponse, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { LoginBody, LoginResponse } from '../responses/LoginResponse';
 import { UserResponse } from '../responses/UserResponse';
+import { LocalAuthGuard } from '../../utils/guards/LocalAuthGuard';
+import { JwtAuthGuard } from '../../utils/guards/JWTAuthGuard';
 
 @Controller('/auth')
 export class AuthController {
-  constructor(
+  constructor (
     private readonly authService: AuthService,
   ) {}
 
@@ -24,7 +25,7 @@ export class AuthController {
   @ApiBody({
     type: LoginBody,
   })
-  @UseGuards(AuthGuard('local'))
+  @UseGuards(LocalAuthGuard)
   @Post('/login')
   login (
     @Request() req,
@@ -35,6 +36,7 @@ export class AuthController {
   @ApiOkResponse()
   @ApiBadRequestResponse({
     description: `\n
+    
     AlreadyRegisteredException:
       User with such username already exist`,
   })
@@ -51,11 +53,11 @@ export class AuthController {
   })
   @ApiUnauthorizedResponse({
     description: `\n
-    UnauthorizedException`
+    UnauthorizedException`,
   })
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(JwtAuthGuard)
   @Get('/user')
-  getMe(
+  getMe (
     @Request() req,
   ) {
     return req.user;

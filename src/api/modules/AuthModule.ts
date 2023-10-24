@@ -8,6 +8,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { LocalStrategy } from '../../utils/access/LocalStrategy';
 import { MapperModule } from './MapperModule';
 import { JwtStrategy } from '../../utils/access/JWTStrategy';
+import { EmailModule } from './EmailModule';
 
 
 @Module({
@@ -17,6 +18,7 @@ import { JwtStrategy } from '../../utils/access/JWTStrategy';
     MongoModule,
     PassportModule,
     MapperModule,
+    EmailModule,
     ConfigModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],

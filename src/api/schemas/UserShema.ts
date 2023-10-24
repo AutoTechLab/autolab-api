@@ -19,6 +19,9 @@ export class User {
     email: string;
 
   @Prop()
+    phone: string;
+
+  @Prop()
     password: string;
 
   @Prop()
@@ -27,11 +30,13 @@ export class User {
   @Prop()
     lastname: string;
 
-  @Prop()
+  @Prop({
+    isRequired: false,
+  })
     middlename: string;
 
   @Prop()
-    age: number;
+    birthDate: Date;
 
   @Prop({
     type: String,

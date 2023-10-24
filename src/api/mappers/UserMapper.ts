@@ -4,10 +4,11 @@ export class UserMapper {
       id: user.id,
       username: user.username,
       email: user.email,
+      phone: user.phone,
       firstname: user.firstname,
       lastname: user.lastname,
       middlename: user.middlename,
-      age: user.age,
+      birthDate: user.birthDate,
       state: user.state,
     };
   }

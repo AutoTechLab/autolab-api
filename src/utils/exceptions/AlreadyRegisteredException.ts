@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus } from '@nestjs/common';
 
 export class AlreadyRegisteredException extends HttpException {
-  constructor () {
-    super('User with such username already exist', HttpStatus.BAD_REQUEST);
+  constructor (repeats: string[]) {
+    super(`User with such ${repeats.join(' and ')} already exist`, HttpStatus.BAD_REQUEST);
   }
 }

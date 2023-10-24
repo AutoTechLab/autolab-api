@@ -17,6 +17,11 @@ export class UserResponse {
     email: string;
 
   @ApiProperty({
+    description: 'User`s phone nimber',
+  })
+    phone: string;
+
+  @ApiProperty({
     description: 'User`s firstname',
   })
     firstname: string;
@@ -32,9 +37,9 @@ export class UserResponse {
     middlename: string;
 
   @ApiProperty({
-    description: 'User`s age',
+    description: 'User`s birth date',
   })
-    age: number;
+    birthDate: Date;
 
   @ApiProperty({
     description: 'User`s state',

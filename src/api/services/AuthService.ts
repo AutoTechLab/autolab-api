@@ -10,8 +10,10 @@ import { EmailService } from './EmailService';
 import { EmailToken } from '../schemas/EmailTokenSchema';
 import { HOUR } from '../../utils/Date';
 import { v4 } from 'uuid';
+import { join } from 'path';
 import * as bcrypt from 'bcrypt';
 import * as mongoose from 'mongoose';
+import * as process from 'process';
 
 @Injectable()
 export class AuthService {
@@ -45,10 +47,12 @@ export class AuthService {
       throw new AlreadyRegisteredException(repeats);
     }
 
+    const avatar = join(process.env.BASE_URL, 'avatars', 'standard.png');
     const hashedPassword = await this.hashPassword(password);
 
     await this.userModel.create({
       ...securedUser,
+      avatar,
       password: hashedPassword,
       state: 'PENDING',
     });

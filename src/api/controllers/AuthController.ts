@@ -7,7 +7,7 @@ import {
   ApiBody,
   ApiNotFoundResponse,
   ApiOkResponse,
-  ApiParam, ApiQuery,
+  ApiParam, ApiQuery, ApiResponse,
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
@@ -43,7 +43,7 @@ export class AuthController {
     return this.authService.login(req.user);
   }
 
-  @ApiOkResponse()
+  @ApiResponse({})
   @ApiBadRequestResponse({
     description: `\n
     
@@ -74,8 +74,9 @@ export class AuthController {
   }
 
   @Post('/approve/:token')
-  @ApiOkResponse({
+  @ApiResponse({
     type: LoginResponse,
+    status: 201,
   })
   @ApiNotFoundResponse({
     description: `\n

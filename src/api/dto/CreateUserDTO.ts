@@ -100,8 +100,6 @@ export class CreateUserDTO {
 
   @ApiProperty({
     description: 'User`s age',
-    minimum: 18,
-    maximum: 100,
   })
   @IsNotEmpty(validationOptionsMsg('Age can not be empty'))
   @Type(() => Date)

@@ -30,22 +30,24 @@ export class AuthService {
   async register (body: CreateUserDTO) {
     const { password, ...securedUser } = body;
 
-    const user = await this.userModel.findOne({
-      $or: [
-        { username: securedUser.username },
-        { email: securedUser.email },
-        { phone: securedUser.phone },
-      ],
+    const userByUsername = await this.userModel.findOne({
+      username: securedUser.username,
     });
 
-    if (user) {
-      const repeats = [];
-      user.username === body.username ? repeats.push('username') : '';
-      user.email === body.email ? repeats.push('email') : '';
-      user.phone === body.phone ? repeats.push('phone') : '';
+    const userByEmail = await this.userModel.findOne({
+      email: securedUser.email,
+    });
 
-      throw new AlreadyRegisteredException(repeats);
-    }
+    const userByPhone = await this.userModel.findOne({
+      phone: securedUser.phone,
+    });
+
+    const repeats = [];
+    userByUsername ? repeats.push('username') : '';
+    userByEmail ? repeats.push('email') : '';
+    userByPhone ? repeats.push('phone') : '';
+    if (repeats.length) throw new AlreadyRegisteredException(repeats);
+
 
     const avatar = join(process.env.BASE_URL, 'avatars', 'standard.png');
     const hashedPassword = await this.hashPassword(password);

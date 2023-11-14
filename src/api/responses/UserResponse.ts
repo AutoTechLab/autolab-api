@@ -42,7 +42,7 @@ export class UserResponse {
     birthDate: Date;
 
   @ApiProperty({
-    description: 'User`s state',
+    description: 'User`s avatar',
   })
-    state: string;
+  avatar: string;
 }

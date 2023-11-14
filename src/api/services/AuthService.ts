@@ -109,7 +109,7 @@ export class AuthService {
 
     if (!comparedPasswords) throw new UnauthorizedException('Username or password are wrong');
 
-    return this.userMapper.getUser(user);
+    return this.userMapper.getAllUser(user);
   }
 
   async login (user) {

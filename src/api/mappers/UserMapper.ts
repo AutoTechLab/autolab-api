@@ -27,5 +27,4 @@ export class UserMapper {
       avatar: user.avatar,
     };
   }
-
 }

@@ -28,6 +28,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     const user = await this.userModel.findById(payload.sub);
 
     if (!user) throw new UnauthorizedException();
-    return this.userMapper.getAllUser(user);
+    return this.userMapper.getUser(user);
   }
 }

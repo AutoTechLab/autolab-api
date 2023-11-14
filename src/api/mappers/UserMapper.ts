@@ -9,7 +9,7 @@ export class UserMapper {
       lastname: user.lastname,
       middlename: user.middlename,
       birthDate: user.birthDate,
-      state: user.state,
+      avatar: user.avatar,
     };
   }
 }

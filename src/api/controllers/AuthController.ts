@@ -46,6 +46,28 @@ export class AuthController {
   @ApiResponse({})
   @ApiBadRequestResponse({
     description: `\n
+    InvalidBodyException:
+      Username is not correct (a-zA-Z0-9_), or too short (min: 2), or too long (max: 40)
+      Username can not be empty
+      Username should be a string
+      Email is can not be empty
+      The phone number can not be empty
+      The password must be between 8 and 50 characters long, include at least 1 digit and 1 letter
+      Password can not be empty
+      Password should be a string
+      Firstname is too short (min 2)
+      Firstname is too long (max 40)
+      Firstname can not be empty
+      Firstname should be a string
+      Lastname is too short (min 2)
+      Lastname is too long (max 40)
+      Lastname can not be empty
+      Lastname should be a string
+      Middle name is too short (min 2)
+      Middle name is too long (max 40)
+      Middle name should be a string
+      Birth date can not be empty
+      Birth date should be a date
     
     AlreadyRegisteredException:
       User with such username/email/phone already exist`,

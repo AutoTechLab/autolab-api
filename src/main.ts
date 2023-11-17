@@ -3,13 +3,22 @@ import { AppModule } from './AppModule';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { HttpExceptionFilter, validationExceptionFactory } from './utils/CommonExceptions';
 
 async function bootstrap () {
   const app = await NestFactory.create(AppModule);
   const configService = app.get<ConfigService>(ConfigService);
   const port = configService.get<number>('port');
 
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalFilters(new HttpExceptionFilter(configService));
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true,
+      whitelist: true,
+      exceptionFactory: validationExceptionFactory(),
+    })
+  );
+
 
   const config = new DocumentBuilder()
     .setTitle('Autolab')

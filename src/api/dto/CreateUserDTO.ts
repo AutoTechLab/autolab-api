@@ -101,7 +101,7 @@ export class CreateUserDTO {
   @ApiProperty({
     description: 'User`s age',
   })
-  @IsNotEmpty(validationOptionsMsg('Age can not be empty'))
+  @IsNotEmpty(validationOptionsMsg('Birth date can not be empty'))
   @Type(() => Date)
   @IsDate(validationOptionsMsg('Birth date should be a date'))
     birthDate: Date;

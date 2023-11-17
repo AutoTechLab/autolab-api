@@ -41,10 +41,13 @@ export class User {
   @Prop({
     type: String,
     enum: State,
+    default: 'PENDING',
   })
     state: string;
 
-  @Prop()
+  @Prop({
+    default: null,
+  })
     avatar: string;
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Organization' })

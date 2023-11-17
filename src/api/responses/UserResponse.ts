@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class UserResponse {
   @ApiProperty({
@@ -31,7 +31,7 @@ export class UserResponse {
   })
     lastname: string;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     description: 'User`s middlename',
   })
     middlename: string;
@@ -44,5 +44,5 @@ export class UserResponse {
   @ApiProperty({
     description: 'User`s avatar',
   })
-  avatar: string;
+    avatar: string;
 }

@@ -44,5 +44,5 @@ export class UserResponse {
   @ApiProperty({
     description: 'User`s avatar',
   })
-  avatar: string;
+    avatar: string;
 }

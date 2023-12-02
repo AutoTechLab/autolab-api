@@ -6,6 +6,7 @@ import * as process from 'process';
 import { EmailModule } from './api/modules/EmailModule';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+import { OrganizationModule } from './api/modules/OrganizationModule';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { join } from 'path';
     MongooseModule.forRoot(process.env.MONGO),
     EmailModule,
     AuthModule,
+    OrganizationModule,
   ],
 })
 export class AppModule {}

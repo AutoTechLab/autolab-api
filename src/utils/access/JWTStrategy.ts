@@ -3,7 +3,7 @@ import { PassportStrategy } from '@nestjs/passport';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectModel } from '@nestjs/mongoose';
-import { User } from '../../api/schemas/UserShema';
+import { User } from '../../api/schemas/UserSchema';
 import { Model } from 'mongoose';
 import { UserMapper } from '../../api/mappers/UserMapper';
 
@@ -27,7 +27,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 
     const user = await this.userModel.findById(payload.sub);
 
-    if (!user) throw new UnauthorizedException();
-    return this.userMapper.getUser(user);
+    if (!user) throw new UnauthorizedException('User is not unauthorized');
+    return this.userMapper.getAllUser(user);
   }
 }

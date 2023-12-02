@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { JwtService } from '@nestjs/jwt';
 import { CreateUserDTO } from '../dto/CreateUserDTO';
-import { User } from '../schemas/UserShema';
+import { User } from '../schemas/UserSchema';
 import { UserMapper } from '../mappers/UserMapper';
 import { AlreadyRegisteredException } from '../../utils/exceptions/AlreadyRegisteredException';
 import { EmailService } from './EmailService';

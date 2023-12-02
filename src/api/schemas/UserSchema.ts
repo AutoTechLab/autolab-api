@@ -1,7 +1,7 @@
 import { HydratedDocument } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Organization } from './OrganizationSchema';
 import * as mongoose from 'mongoose';
+import { Role } from './RoleSchema';
 
 export enum State {
   PENDING,
@@ -47,8 +47,8 @@ export class User {
   @Prop()
     avatar: string;
 
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Organization' })
-    organization: Organization;
+  @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Role' }] })
+    roles: Role[];
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

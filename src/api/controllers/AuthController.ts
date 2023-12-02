@@ -15,12 +15,14 @@ import { LoginBody, LoginResponse } from '../responses/LoginResponse';
 import { UserResponse } from '../responses/UserResponse';
 import { LocalAuthGuard } from '../../utils/guards/LocalAuthGuard';
 import { JwtAuthGuard } from '../../utils/guards/JWTAuthGuard';
+import { UserMapper } from '../mappers/UserMapper';
 
 @ApiTags('Auth')
 @Controller('/auth')
 export class AuthController {
   constructor (
     private readonly authService: AuthService,
+    private readonly userMapper: UserMapper,
   ) {}
 
   @ApiOkResponse({
@@ -85,14 +87,15 @@ export class AuthController {
   })
   @ApiUnauthorizedResponse({
     description: `\n
-    UnauthorizedException`,
+    UnauthorizedException:
+      User is not unauthorized`,
   })
   @UseGuards(JwtAuthGuard)
   @Get('/user')
   getMe (
     @Request() req,
   ) {
-    return req.user;
+    return this.userMapper.getUser(req.user);
   }
 
   @Post('/approve/:token')

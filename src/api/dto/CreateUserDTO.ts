@@ -55,13 +55,8 @@ export class CreateUserDTO {
     minLength: 2,
     maxLength: 40,
   })
-  @MinLength(
-    2,
-    validationOptionsMsg('Firstname is too short (min 2)')
-  )
-  @MaxLength(
-    40,
-    validationOptionsMsg('Firstname is too long (max 40)'))
+  @MinLength(2, validationOptionsMsg('Firstname is too short (min 2)'))
+  @MaxLength(40, validationOptionsMsg('Firstname is too long (max 40)'))
   @IsNotEmpty(validationOptionsMsg('Firstname can not be empty'))
   @IsString(validationOptionsMsg('Firstname should be a string'))
     firstname: string;
@@ -71,13 +66,8 @@ export class CreateUserDTO {
     minLength: 2,
     maxLength: 40,
   })
-  @MinLength(
-    2,
-    validationOptionsMsg('Lastname is too short (min 2)')
-  )
-  @MaxLength(
-    40,
-    validationOptionsMsg('Lastname is too long (max 40)'))
+  @MinLength(2, validationOptionsMsg('Lastname is too short (min 2)'))
+  @MaxLength(40, validationOptionsMsg('Lastname is too long (max 40)'))
   @IsNotEmpty(validationOptionsMsg('Lastname can not be empty'))
   @IsString(validationOptionsMsg('Lastname should be a string'))
     lastname: string;
@@ -87,13 +77,8 @@ export class CreateUserDTO {
     minLength: 2,
     maxLength: 40,
   })
-  @MinLength(
-    2,
-    validationOptionsMsg('Middle name is too short (min 2)')
-  )
-  @MaxLength(
-    40,
-    validationOptionsMsg('Middle name is too long (max 40)'))
+  @MinLength(2, validationOptionsMsg('Middle name is too short (min 2)'))
+  @MaxLength(40, validationOptionsMsg('Middle name is too long (max 40)'))
   @IsOptional()
   @IsString(validationOptionsMsg('Middle name should be a string'))
     middlename?: string;

@@ -25,4 +25,8 @@ export class OrganizationRepository {
   deleteById (id: mongoose.Schema.Types.ObjectId) {
     return this.organizationModel.findByIdAndDelete(id);
   }
+
+  findMany (data) {
+    return this.organizationModel.find(data);
+  }
 }

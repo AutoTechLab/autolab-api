@@ -103,11 +103,11 @@ export class AuthService {
         { phone: username },
       ],
     });
-    if (!user) throw new UnauthorizedException('Username or password are wrong');
+    if (!user) throw new UnauthorizedException('Username is wrong');
 
     const comparedPasswords = await bcrypt.compare(password, user.password);
 
-    if (!comparedPasswords) throw new UnauthorizedException('Username or password are wrong');
+    if (!comparedPasswords) throw new UnauthorizedException('Password is wrong');
 
     return this.userMapper.getAllUser(user);
   }

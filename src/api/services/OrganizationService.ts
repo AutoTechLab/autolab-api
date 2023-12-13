@@ -48,4 +48,8 @@ export class OrganizationService {
     const rolesIds = roles.map((role) => role.id);
     await this.userRepository.deleteRoles(rolesIds);
   }
+
+  async getById (organizationId: mongoose.Schema.Types.ObjectId) {
+    return this.organizationRepository.findById(organizationId);
+  }
 }

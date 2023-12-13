@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Param, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Req, UseGuards } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiBearerAuth, ApiForbiddenResponse, ApiOkResponse, ApiParam,
@@ -13,12 +13,15 @@ import { SimpleOrganizationResponse } from '../responses/SimpleOrganizationRespo
 import mongoose from 'mongoose';
 import { OrganizationByIdPipe } from '../pipes/OrganizationByIdPipe';
 import { OwnerGuard } from '../../utils/guards/OwnerGuard';
+import { OrganizationMapper } from '../mappers/OrganizationMapper';
+import { OrganizationResponse } from '../responses/OrganizationsResponse';
 
 @ApiTags('Organizations')
 @Controller('/organization')
 export class OrganizationController {
   constructor (
     private readonly organizationService: OrganizationService,
+    private readonly organizationMapper: OrganizationMapper,
   ) {}
 
   @ApiBearerAuth()
@@ -85,5 +88,32 @@ export class OrganizationController {
     @Param('organizationId', OrganizationByIdPipe) organizationId: mongoose.Schema.Types.ObjectId,
   ) {
     return this.organizationService.delete(organizationId);
+  }
+
+  @ApiBearerAuth()
+  @Get('/:organizationId')
+  @ApiOkResponse({
+    type: OrganizationResponse,
+  })
+  @ApiBadRequestResponse({
+    description: `\n
+    InvalidEntityException:
+      Organization with such id is not found`,
+  })
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorizedException:
+      User is not unauthorized`,
+  })
+  @ApiParam({
+    name: 'organizationId',
+    type: String,
+  })
+  @UseGuards(JwtAuthGuard)
+  async getById (
+    @Param('organizationId', OrganizationByIdPipe) organizationId: mongoose.Schema.Types.ObjectId,
+  ) {
+    const organization = await this.organizationService.getById(organizationId);
+    return this.organizationMapper.getOrganization(organization);
   }
 }

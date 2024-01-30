@@ -6,9 +6,11 @@ import { ConfigService } from '@nestjs/config';
 import { HttpExceptionFilter, validationExceptionFactory } from './utils/CommonExceptions';
 
 async function bootstrap () {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, { cors: true });
   const configService = app.get<ConfigService>(ConfigService);
   const port = configService.get<number>('port');
+
+  app.enableCors();
 
   app.useGlobalFilters(new HttpExceptionFilter(configService));
   app.useGlobalPipes(

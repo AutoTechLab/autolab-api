@@ -9,6 +9,8 @@ import { LocalStrategy } from '../../utils/access/LocalStrategy';
 import { MapperModule } from './MapperModule';
 import { JwtStrategy } from '../../utils/access/JWTStrategy';
 import { EmailModule } from './EmailModule';
+import { RepositoryModule } from './RepositoryModule';
+import { UserModule } from './UserModule';
 
 
 @Module({
@@ -20,6 +22,8 @@ import { EmailModule } from './EmailModule';
     MapperModule,
     EmailModule,
     ConfigModule,
+    RepositoryModule,
+    UserModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({

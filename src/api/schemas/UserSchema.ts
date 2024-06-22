@@ -33,7 +33,7 @@ export class User {
   @Prop({
     isRequired: false,
   })
-    middlename: string;
+    middlename?: string;
 
   @Prop()
     birthDate: Date;

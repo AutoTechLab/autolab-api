@@ -4,6 +4,7 @@ import { User, UserSchema } from '../schemas/UserSchema';
 import { Organization, OrganizationSchema } from '../schemas/OrganizationSchema';
 import { EmailToken, EmailTokenSchema } from '../schemas/EmailTokenSchema';
 import { Role, RoleSchema } from '../schemas/RoleSchema';
+import { ResetPasswordToken, ResetPasswordTokenSchema } from '../schemas/ResetPasswordTokenSchema';
 
 @Module({
   imports: [
@@ -11,6 +12,7 @@ import { Role, RoleSchema } from '../schemas/RoleSchema';
     MongooseModule.forFeature([{ name: Organization.name, schema: OrganizationSchema }]),
     MongooseModule.forFeature([{ name: EmailToken.name, schema: EmailTokenSchema }]),
     MongooseModule.forFeature([{ name: Role.name, schema: RoleSchema }]),
+    MongooseModule.forFeature([{ name: ResetPasswordToken.name, schema: ResetPasswordTokenSchema }]),
   ],
   exports: [MongooseModule],
 })

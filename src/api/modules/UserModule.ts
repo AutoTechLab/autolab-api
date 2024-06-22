@@ -4,9 +4,10 @@ import { UserController } from '../controllers/UserController';
 import { MongoModule } from './MongoModule';
 import { RepositoryModule } from './RepositoryModule';
 import { MapperModule } from './MapperModule';
+import { UserByEmailPipe } from '../pipes/UserByEmailPipe';
 
 @Module({
-  providers: [UserService],
+  providers: [UserService, UserByEmailPipe],
   controllers: [UserController],
   imports: [MongoModule, RepositoryModule, MapperModule],
   exports: [UserService],

@@ -10,6 +10,11 @@ export class EmailToken {
 
   @Prop()
     token: string;
+
+  @Prop({
+    default: Date.now,
+  })
+    createdAt: Date;
 }
 
 export const EmailTokenSchema = SchemaFactory.createForClass(EmailToken);

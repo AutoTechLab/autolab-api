@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Query, Request, UseGuards } from '@nestjs/common';
+import {Body, Controller, Get, Param, Patch, Post, Query, Req, UseGuards} from '@nestjs/common';
 import { AuthService } from '../services/AuthService';
 import { CreateUserDTO } from '../dto/CreateUserDTO';
 import {
@@ -16,6 +16,9 @@ import { UserResponse } from '../responses/UserResponse';
 import { LocalAuthGuard } from '../../utils/guards/LocalAuthGuard';
 import { JwtAuthGuard } from '../../utils/guards/JWTAuthGuard';
 import { UserMapper } from '../mappers/UserMapper';
+import { UserByEmailPipe } from '../pipes/UserByEmailPipe';
+import { ResetPasswordDTO } from '../dto/ResetPasswordDTO';
+import { ChangePasswordDTO } from '../dto/ChangePasswordDTO';
 
 @ApiTags('Auth')
 @Controller('/auth')
@@ -40,7 +43,7 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   @Post('/login')
   login (
-    @Request() req,
+    @Req() req,
   ) {
     return this.authService.login(req.user);
   }
@@ -93,7 +96,7 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @Get('/user')
   getMe (
-    @Request() req,
+    @Req() req,
   ) {
     return this.userMapper.getUser(req.user);
   }
@@ -131,8 +134,47 @@ export class AuthController {
   })
   @Post('/repeat/email')
   requestEmailVerification (
-    @Query('email') email: string,
+    @Query('email', UserByEmailPipe) email: string,
   ) {
     return this.authService.requestEmailVerification(email);
+  }
+
+  @ApiOkResponse()
+  @ApiNotFoundResponse({
+    description: `\n
+    NotFoundException: 
+      User with such email is not found`,
+  })
+  @ApiQuery({
+    name: 'email',
+    description: 'User`s email',
+  })
+  @Post('/password/reset/email')
+  requestEmailTOResetPassword (
+    @Query('email', UserByEmailPipe) email: string,
+  ) {
+    return this.authService.requestEmailToResetPassword(email);
+  }
+
+  @ApiOkResponse({
+    type: LoginResponse,
+  })
+  @Post('password/reset/:token')
+  resetPassword (
+    @Param('token') token: string,
+    @Body() data: ResetPasswordDTO,
+  ) {
+    return this.authService.resetPassword(token, data);
+  }
+
+  @ApiBearerAuth()
+  @ApiOkResponse()
+  @UseGuards(JwtAuthGuard)
+  @Patch('/change/password')
+  changePassword (
+    @Req() req,
+    @Body() body: ChangePasswordDTO,
+  ) {
+    return this.authService.changePassword(req.user.id, body);
   }
 }

@@ -1,10 +1,8 @@
-import { HydratedDocument } from 'mongoose';
+import { Document } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Organization } from './OrganizationSchema';
 import * as mongoose from 'mongoose';
 import { User } from './UserSchema';
-
-export type RoleDocument = HydratedDocument<Role>;
 
 export enum Roles {
   'OWNER',
@@ -13,7 +11,7 @@ export enum Roles {
 }
 
 @Schema()
-export class Role {
+export class Role extends Document {
   @Prop({
     enum: Roles,
   })

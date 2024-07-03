@@ -1,4 +1,4 @@
-import {BadRequestException, Injectable, NotFoundException, UnauthorizedException} from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { JwtService } from '@nestjs/jwt';
@@ -7,17 +7,24 @@ import { UserMapper } from '../mappers/UserMapper';
 import { AlreadyRegisteredException } from '../../utils/exceptions/AlreadyRegisteredException';
 import { EmailService } from './EmailService';
 import { EmailToken } from '../schemas/EmailTokenSchema';
-import {HOUR, MINUTE} from '../../utils/Date';
+import { HOUR, MINUTE } from '../../utils/Date';
 import { v4 } from 'uuid';
-import { join } from 'path';
 import * as bcrypt from 'bcrypt';
 import * as mongoose from 'mongoose';
-import * as process from 'process';
 import { UserRepository } from '../repositories/UserRepository';
 import { ResetPasswordToken } from '../schemas/ResetPasswordTokenSchema';
 import { TooManyActionsException } from '../../utils/exceptions/TooManyActionsException';
 import { ResetPasswordDTO } from '../dto/ResetPasswordDTO';
 import { ChangePasswordDTO } from '../dto/ChangePasswordDTO';
+import { UserService } from './UserService';
+import { ConfigService } from '@nestjs/config';
+
+export const DEFAULT_AVATARS = [
+  'https://autolab-fs.s3.eu-north-1.amazonaws.com/default/avatar-1.svg',
+  'https://autolab-fs.s3.eu-north-1.amazonaws.com/default/avatar-2.svg',
+  'https://autolab-fs.s3.eu-north-1.amazonaws.com/default/avatar-3.svg',
+  'https://autolab-fs.s3.eu-north-1.amazonaws.com/default/avatar-4.svg'
+]
 
 @Injectable()
 export class AuthService {
@@ -30,6 +37,8 @@ export class AuthService {
     private readonly jwtService: JwtService,
     private readonly emailService: EmailService,
     private readonly userRepository: UserRepository,
+    private readonly userService: UserService,
+    private readonly configService: ConfigService,
   ) {}
 
   async register (body: CreateUserDTO) {
@@ -54,7 +63,7 @@ export class AuthService {
     if (repeats.length) throw new AlreadyRegisteredException(repeats);
 
 
-    const avatar = join(process.env.BASE_URL, 'avatars', 'standard.png');
+    const avatar = DEFAULT_AVATARS[Math.floor(Math.random() * DEFAULT_AVATARS.length)];
     const hashedPassword = await this.hashPassword(password);
 
     await this.userRepository.create({
@@ -73,13 +82,7 @@ export class AuthService {
   }
 
   async validateUser (username: string, password: string) {
-    const user  = await this.userRepository.find({
-      $or: [
-        { username },
-        { email: username },
-        { phone: username },
-      ],
-    });
+    const user  = await this.userService.get(username);
     if (!user) throw new UnauthorizedException('Username is wrong');
 
     const comparedPasswords = await bcrypt.compare(password, user.password);
@@ -89,16 +92,14 @@ export class AuthService {
     return this.userMapper.getAllUser(user);
   }
 
-  async login (user) {
+  login (user) {
     if (user.state !== 'APPROVED') throw new UnauthorizedException('User is not approved');
     return this.getAccessToken(user.id);
   }
 
   private getAccessToken (userId: mongoose.Schema.Types.ObjectId) {
     const payload = { sub: userId };
-    return {
-      accessToken: this.jwtService.sign(payload),
-    };
+    return this.jwtService.sign(payload)
   }
 
   async approve (token: string) {
@@ -120,14 +121,14 @@ export class AuthService {
 
   async requestEmailVerification (email: string) {
     const subject = 'Approve email';
-    const path = process.env.FRONT_BASE_URL + 'register/confirm/';
+    const path = this.configService.get<string>('FRONT_BASE_URL') + 'register/confirm/';
 
     await this.requestEmail(email, subject, path, this.emailTokenModel);
   }
 
   async requestEmailToResetPassword (email: string) {
     const subject = 'Reset password';
-    const path = process.env.FRONT_BASE_URL + 'login/recover/';
+    const path = this.configService.get<string>('FRONT_BASE_URL') + 'login/recover/';
 
     await this.requestEmail(email, subject, path, this.resetPasswordTokenModel);
   }

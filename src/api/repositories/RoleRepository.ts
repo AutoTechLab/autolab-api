@@ -10,11 +10,11 @@ export class RoleRepository {
     private roleModel: Model<Role>,
   ) {}
 
-  create (data) {
-    return this.roleModel.create(data);
+  create (data): Promise<Role> {
+    return this.roleModel.create(data) as Promise<Role>;
   }
 
-  findMany (data) {
+  findMany (data): Promise<Role[]> {
     return this.roleModel.find(data).populate('user').populate('organization');
   }
 
@@ -22,7 +22,7 @@ export class RoleRepository {
     return this.roleModel.deleteMany(data);
   }
 
-  find (data) {
+  find (data): Promise<Role> {
     return this.roleModel.findOne(data);
   }
 }

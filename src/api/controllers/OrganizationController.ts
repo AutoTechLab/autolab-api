@@ -17,7 +17,7 @@ import { OrganizationMapper } from '../mappers/OrganizationMapper';
 import { OrganizationResponse } from '../responses/OrganizationsResponse';
 
 @ApiTags('Organizations')
-@Controller('/organization')
+@Controller('/organizations')
 export class OrganizationController {
   constructor (
     private readonly organizationService: OrganizationService,

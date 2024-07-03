@@ -5,6 +5,9 @@ import { RoleRepository } from '../repositories/RoleRepository';
 import { UserRepository } from '../repositories/UserRepository';
 import { OrganizationRepository } from '../repositories/OrganizationRepository';
 import { AlreadyExistException } from '../../utils/exceptions/AlreadyExistException';
+import {UserService} from "./UserService";
+
+const DEFAULT_AVATAR = 'https://autolab-fs.s3.eu-north-1.amazonaws.com/default/avatar-org.svg';
 
 @Injectable()
 export class OrganizationService {
@@ -12,6 +15,7 @@ export class OrganizationService {
     private readonly organizationRepository: OrganizationRepository,
     private readonly roleRepository: RoleRepository,
     private readonly userRepository: UserRepository,
+    private readonly userService: UserService,
   ) {
   }
 
@@ -21,6 +25,7 @@ export class OrganizationService {
 
     const organization = await this.organizationRepository.create({
       ...body,
+      avatar: DEFAULT_AVATAR,
       employees: userId,
     });
 
@@ -30,7 +35,7 @@ export class OrganizationService {
       name: 'OWNER',
     });
 
-    await this.userRepository.updateRoleById(userId, role.id);
+    await this.userService.addRole(userId, role.id);
 
     return organization;
   }
@@ -45,8 +50,7 @@ export class OrganizationService {
       organization: organizationId,
     });
 
-    const rolesIds = roles.map((role) => role.id);
-    await this.userRepository.deleteRoles(rolesIds);
+    await this.userService.deleteRoles(roles);
   }
 
   async getById (organizationId: mongoose.Schema.Types.ObjectId) {

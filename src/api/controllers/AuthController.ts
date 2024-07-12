@@ -1,4 +1,13 @@
-import {Body, Controller, Get, Param, Patch, Post, Query, Req, UseGuards} from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get, Param,
+  Patch,
+  Post,
+  Query,
+  Req, Res,
+  UseGuards
+} from '@nestjs/common';
 import { AuthService } from '../services/AuthService';
 import { CreateUserDTO } from '../dto/CreateUserDTO';
 import {
@@ -44,8 +53,10 @@ export class AuthController {
   @Post('/login')
   login (
     @Req() req,
+    @Res({ passthrough: true }) res,
   ) {
-    return this.authService.login(req.user);
+    const accessToken = this.authService.login(req.user);
+    res.cookie('accessToken', accessToken);
   }
 
   @ApiResponse({})
@@ -103,7 +114,6 @@ export class AuthController {
 
   @Post('/approve/:token')
   @ApiResponse({
-    type: LoginResponse,
     status: 201,
   })
   @ApiNotFoundResponse({
@@ -116,10 +126,12 @@ export class AuthController {
     required: true,
     description: 'Email token',
   })
-  approve (
+  async approve (
     @Param('token') token: string,
+    @Res({ passthrough: true }) res,
   ) {
-    return this.authService.approve(token);
+    const accessToken = await this.authService.approve(token);
+    res.cookie('accessToken', accessToken);
   }
 
   @ApiOkResponse()
@@ -150,7 +162,7 @@ export class AuthController {
     description: 'User`s email',
   })
   @Post('/password/reset/email')
-  requestEmailTOResetPassword (
+  requestEmailToResetPassword (
     @Query('email', UserByEmailPipe) email: string,
   ) {
     return this.authService.requestEmailToResetPassword(email);
@@ -159,17 +171,40 @@ export class AuthController {
   @ApiOkResponse({
     type: LoginResponse,
   })
+  @ApiNotFoundResponse({
+    description: `\n
+    NotFoundException: 
+      Such token is not found`,
+  })
+  @ApiBadRequestResponse({
+    description: `\n
+    BadRequestException^
+      New password must be different from the old one`,
+  })
   @Post('password/reset/:token')
-  resetPassword (
+  async resetPassword (
     @Param('token') token: string,
     @Body() data: ResetPasswordDTO,
+    @Res({ passthrough: true }) res,
   ) {
-    return this.authService.resetPassword(token, data);
+    const accessToken = await this.authService.resetPassword(token, data);
+    res.cookie('accessToken', accessToken);
   }
 
   @ApiBearerAuth()
-  @ApiOkResponse()
   @UseGuards(JwtAuthGuard)
+  @ApiOkResponse()
+  @ApiBadRequestResponse({
+    description: `\n
+    BadRequestException
+      New password must be different from the old one
+      Password is wrong`,
+  })
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorizedException:
+      User is not unauthorized`,
+  })
   @Patch('/change/password')
   changePassword (
     @Req() req,

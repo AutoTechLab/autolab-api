@@ -4,6 +4,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { HttpExceptionFilter, validationExceptionFactory } from './utils/CommonExceptions';
+import cookieParser from "cookie-parser";
 
 async function bootstrap () {
   const app = await NestFactory.create(AppModule, { cors: true });
@@ -11,6 +12,7 @@ async function bootstrap () {
   const port = configService.get<number>('port');
 
   app.enableCors();
+  app.use(cookieParser())
 
   app.useGlobalFilters(new HttpExceptionFilter(configService));
   app.useGlobalPipes(

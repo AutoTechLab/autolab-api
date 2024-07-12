@@ -1,8 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { Schema, Model, FilterQuery } from 'mongoose';
+import mongoose, { Model, FilterQuery } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from '../schemas/UserSchema';
-import mongoose from "mongoose";
 
 @Injectable()
 export class UserRepository {
@@ -11,28 +10,24 @@ export class UserRepository {
     private userModel: Model<User>,
   ) {}
 
-  find (where: FilterQuery<User>) {
+  find (where: FilterQuery<User>): Promise<User> {
     return this.userModel.findOne(where)
   }
 
-  findById (id: mongoose.Schema.Types.ObjectId) {
+  findById (id: mongoose.Schema.Types.ObjectId): Promise<User> {
     return this.userModel.findById(id);
   }
 
-  create (data) {
-    return this.userModel.create(data);
+  create (data): Promise<User> {
+    return this.userModel.create(data) as Promise<User>;
   }
 
-  update (where: FilterQuery<User>, data) {
-    return this.userModel.findOneAndUpdate(where, data);
+  updateById (id: mongoose.Schema.Types.ObjectId, data): Promise<User> {
+    return this.userModel.findByIdAndUpdate(id, data, { new: true });
   }
 
-  updateRoleById (userId: Schema.Types.ObjectId, roleId: Schema.Types.ObjectId) {
-    return this.userModel.findByIdAndUpdate(userId, {
-      $push: {
-        roles: roleId,
-      },
-    });
+  update (where: FilterQuery<User>, data): Promise<User> {
+    return this.userModel.findOneAndUpdate(where, data, { new: true });
   }
 
   async deleteRoles (rolesIds: string[]) {

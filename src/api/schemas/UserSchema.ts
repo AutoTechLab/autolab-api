@@ -1,4 +1,4 @@
-import { HydratedDocument } from 'mongoose';
+import { Document } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import * as mongoose from 'mongoose';
 import { Role } from './RoleSchema';
@@ -8,10 +8,8 @@ export enum State {
   APPROVED
 }
 
-export type UserDocument = HydratedDocument<User>;
-
 @Schema()
-export class User {
+export class User extends Document {
   @Prop()
     username: string;
 

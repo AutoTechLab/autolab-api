@@ -9,6 +9,13 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { validationOptionsMsg } from '../../utils/GLOBALS';
 
 export class CreateOrganizationDTO {
+  @ApiPropertyOptional({
+    type: 'string',
+    format: 'binary',
+    description: 'File to upload',
+  })
+    avatar: string;
+
   @ApiProperty({
     description: 'Organization\'s name',
     minLength: 2,

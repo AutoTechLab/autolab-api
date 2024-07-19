@@ -4,7 +4,7 @@ import { InvalidExtensionException } from '../../utils/exceptions/InvalidExtensi
 import { TooLargeSizeException } from '../../utils/exceptions/TooLargeSizeException';
 
 const AVATAR_MAX_SIZE = 1048576;
-const AVATAR_EXTENSIONS: string[] = ['.png', '.jpg', '.jpeg', '.webp'];
+const AVATAR_EXTENSIONS: string[] = ['.png', '.jpg', '.jpeg', '.webp', '.svg'];
 
 @Injectable()
 export class FileValidation implements PipeTransform {

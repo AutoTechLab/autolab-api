@@ -5,10 +5,11 @@ import { MapperModule } from './MapperModule';
 import { RepositoryModule } from './RepositoryModule';
 import { OrganizationByIdPipe } from '../pipes/OrganizationByIdPipe';
 import { UserModule } from './UserModule';
+import { AwsService } from '../services/AwsService';
 
 @Module({
   controllers: [OrganizationController],
-  providers: [OrganizationService, OrganizationByIdPipe],
+  providers: [OrganizationService, OrganizationByIdPipe, AwsService],
   imports: [RepositoryModule, MapperModule, UserModule],
   exports: [OrganizationService],
 })

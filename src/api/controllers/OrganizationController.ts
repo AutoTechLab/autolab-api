@@ -1,7 +1,22 @@
-import { Body, Controller, Delete, Get, Param, Post, Req, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Req,
+  UploadedFile,
+  UseGuards,
+  UseInterceptors
+} from '@nestjs/common';
 import {
   ApiBadRequestResponse,
-  ApiBearerAuth, ApiForbiddenResponse, ApiOkResponse, ApiParam,
+  ApiBearerAuth,
+  ApiConsumes,
+  ApiForbiddenResponse,
+  ApiOkResponse,
+  ApiParam,
   ApiResponse,
   ApiTags,
   ApiUnauthorizedResponse,
@@ -15,6 +30,8 @@ import { OrganizationByIdPipe } from '../pipes/OrganizationByIdPipe';
 import { OwnerGuard } from '../../utils/guards/OwnerGuard';
 import { OrganizationMapper } from '../mappers/OrganizationMapper';
 import { OrganizationResponse } from '../responses/OrganizationsResponse';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { FileValidation } from '../pipes/FileValidation';
 
 @ApiTags('Organizations')
 @Controller('/organizations')
@@ -25,6 +42,7 @@ export class OrganizationController {
   ) {}
 
   @ApiBearerAuth()
+  @ApiConsumes('multipart/form-data')
   @ApiResponse({
     type: SimpleOrganizationResponse,
     status: 201,
@@ -52,12 +70,14 @@ export class OrganizationController {
       User is not unauthorized`,
   })
   @UseGuards(JwtAuthGuard)
+  @UseInterceptors(FileInterceptor('avatar'))
   @Post()
   async create (
     @Req() req,
     @Body() body: CreateOrganizationDTO,
+    @UploadedFile(FileValidation) avatar: Express.Multer.File,
   ) {
-    const { id } = await this.organizationService.create(req.user.id, body);
+    const { id } = await this.organizationService.create(req.user.id, body, avatar);
     return { id };
   }
 

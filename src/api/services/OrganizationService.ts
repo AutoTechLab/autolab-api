@@ -5,7 +5,8 @@ import { RoleRepository } from '../repositories/RoleRepository';
 import { UserRepository } from '../repositories/UserRepository';
 import { OrganizationRepository } from '../repositories/OrganizationRepository';
 import { AlreadyExistException } from '../../utils/exceptions/AlreadyExistException';
-import {UserService} from "./UserService";
+import { UserService } from './UserService';
+import { AwsService } from './AwsService';
 
 const DEFAULT_AVATAR = 'https://autolab-fs.s3.eu-north-1.amazonaws.com/default/avatar-org.svg';
 
@@ -16,16 +17,21 @@ export class OrganizationService {
     private readonly roleRepository: RoleRepository,
     private readonly userRepository: UserRepository,
     private readonly userService: UserService,
+    private readonly awsService: AwsService,
   ) {
   }
 
-  async create (userId: mongoose.Schema.Types.ObjectId, body: CreateOrganizationDTO) {
+  async create (userId: mongoose.Schema.Types.ObjectId, body: CreateOrganizationDTO, avatar: Express.Multer.File) {
     const duplicate = await this.organizationRepository.find({ name: body.name });
     if (duplicate) throw new AlreadyExistException('Organization', 'name');
 
+    const avatarLink = avatar
+      ? await this.awsService.uploadFile(avatar)
+      : DEFAULT_AVATAR;
+
     const organization = await this.organizationRepository.create({
       ...body,
-      avatar: DEFAULT_AVATAR,
+      avatar: avatarLink,
       employees: userId,
     });
 
